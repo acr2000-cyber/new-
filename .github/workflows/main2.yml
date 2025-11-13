@@ -1,0 +1,33 @@
+name: Run Python Script at Specific Times
+
+on:
+  schedule:
+    # Runs daily at 6 AM UTC
+    - cron: '0 6 * * *'
+    # Runs daily at 12 AM (Midnight) UTC
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      # CRITICAL FIX 1: Install Python package separately
+      - name: Install Playwright Python Package
+        run: pip install playwright
+          
+      # CRITICAL FIX 2: Install browser binaries separately
+      - name: Install Playwright Browser Binaries
+        # This command installs Chromium, Firefox, and WebKit
+        run: playwright install
+          
+      # CRITICAL FIX 3: Use python3 for reliable execution
+      - name: Run script
+        run: python3 ppv.py
