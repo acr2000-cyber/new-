@@ -2,31 +2,32 @@ name: Run Python Script at Specific Times
 
 on:
   schedule:
+    # Runs daily at 6 AM UTC
     - cron: '0 6 * * *'
+    # Runs daily at 12 AM (Midnight) UTC
     - cron: '0 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: Install Playwright and dependencies
-      run: |
-        # Install the Playwright Python package
-        pip install playwright
-        # Install the browser binaries (Chromium, Firefox, WebKit)
-        playwright install
-        # Add these steps BEFORE the step that runs 'python ppv.py'
-
-    - name: 📦 Install Python Dependencies
-      run: pip install playwright
-      
-    - name: 🌐 Install Playwright Browser Drivers
-      run: playwright install
-    - name: Run script
-      run: python ppv.py
+      - name: Checkout code
+        uses: actions/checkout@v4 # Updated to v4 for best practice
+        
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5 # Updated to v5 for best practice
+        with:
+          python-version: '3.10'
+          
+      # CRITICAL FIX: All installation commands combined into a single step
+      - name: Install Playwright and Dependencies
+        run: |
+          echo "Installing Playwright Python package..."
+          pip install playwright
+          
+          echo "Installing Playwright browser binaries..."
+          # This command installs Chromium, Firefox, and WebKit
+          playwright install --with-deps
+          
+      - name: Run script
+        run: python ppv.py
