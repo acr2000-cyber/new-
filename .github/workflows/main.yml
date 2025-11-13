@@ -12,22 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Updated to v4 for best practice
+        uses: actions/checkout@v4
         
       - name: Set up Python 3.10
-        uses: actions/setup-python@v5 # Updated to v5 for best practice
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           
-      # CRITICAL FIX: All installation commands combined into a single step
-      - name: Install Playwright and Dependencies
-        run: |
-          echo "Installing Playwright Python package..."
-          pip install playwright
+      # CRITICAL FIX 1: Install Python package separately
+      - name: Install Playwright Python Package
+        run: pip install playwright
           
-          echo "Installing Playwright browser binaries..."
-          # This command installs Chromium, Firefox, and WebKit
-          playwright install --with-deps
+      # CRITICAL FIX 2: Install browser binaries separately
+      - name: Install Playwright Browser Binaries
+        # This command installs Chromium, Firefox, and WebKit
+        run: playwright install
           
+      # CRITICAL FIX 3: Use python3 for reliable execution
       - name: Run script
-        run: python ppv.py
+        run: python3 ppv.py
