@@ -20,6 +20,13 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Install playwright browsers
         run: playwright install  
-      - name: execute py script # run file
+      - name: Check Python version
+        run: python --version
+      - name: Install dependencies
         run: |
-          python ppv.py
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install
+          pip list | grep playwright
+      - name: execute py script
+        run: python ppv.py
